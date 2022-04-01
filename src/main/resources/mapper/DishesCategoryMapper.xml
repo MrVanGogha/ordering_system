@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmu.mapper.DishesCategoryMapper">
+
+    <!--新增菜品分类-->
+    <insert id="save" parameterType="dishesCategory">
+        insert into dishes_category(`name`,`create_time`) values(#{name},#{createTime})
+    </insert>
+
+    <!--更新菜品分类-->
+    <update id="update" parameterType="dishesCategory">
+        update dishes_category set name = #{name} ,create_time = #{createTime} where id = #{id}
+    </update>
+
+    <!--删除-->
+    <delete id="delete">
+        delete from dishes_category where id = #{id}
+    </delete>
+    <!--通过编码模糊查询菜品分类列表-->
+    <select id="queryAll" resultType="dishesCategory">
+        select * from dishes_category
+        <where>
+            <if test="name != null">
+                name like concat('%',#{name},'%')
+            </if>
+        </where>
+    </select>
+
+
+    <!--根据id查询菜品分类-->
+    <select id="queryById" resultType="dishesCategory">
+        select * from dishes_category where id = #{id}
+    </select>
+
+    <!--根据菜名查询菜品分类-->
+    <select id="exist" resultType="dishesCategory">
+        select * from dishes_category
+        <where>
+            <if test="name != null">
+                name = #{name}
+            </if>
+            <if test="id != null">
+                and id != #{id}
+            </if>
+        </where>
+    </select>
+
+</mapper>

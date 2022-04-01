@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmu.mapper.BoxMapper">
+
+    <!--新增包厢-->
+    <insert id="save" parameterType="box">
+        insert into box(`box_code`,`create_time`,`desc`,`status`) values(#{boxCode},#{createTime},#{desc},#{status})
+    </insert>
+
+    <!--删除包厢-->
+    <delete id="delete">
+        delete from box where id = #{id}
+    </delete>
+
+    <!--更新包厢-->
+    <update id="update" parameterType="box">
+        update box set `box_code` = #{boxCode},`desc` = #{desc} where id = #{id}
+    </update>
+
+    <!--通过编码模糊查询包厢列表-->
+    <select id="queryAllLikeCode" resultType="box">
+        select * from box
+        <where>
+            <if test="box_code != null and box_code != ''">
+                box_code like concat('%',#{boxCode},'%')
+            </if>
+        </where>
+    </select>
+
+    <!--通过编码和Id校验包厢是否已经存在-->
+    <select id="queryByCode" resultType="box">
+        select * from box
+        <where>
+            <if test="boxCode != null">
+                box_code = #{boxCode}
+            </if>
+            <if test="id != null">
+                and id != #{id}
+            </if>
+        </where>
+    </select>
+
+    <!--根据id查询包厢-->
+    <select id="queryById" resultType="box">
+        select * from box where id = #{id}
+    </select>
+
+    <!--更新包厢状态-->
+    <update id="updateStatus">
+        update box set status = #{status} where box_code = #{boxCode}
+    </update>
+
+
+</mapper>

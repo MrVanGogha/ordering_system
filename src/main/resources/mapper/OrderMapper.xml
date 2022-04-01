@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmu.mapper.OrderMapper">
+
+    <!--新增订单-->
+    <insert id="save" parameterType="order">
+        insert into `order` (`login_name`,`login_phone`,`create_time`) values(#{loginName},#{loginPhone},#{createTime})
+    </insert>
+
+    <!--删除订单-->
+    <delete id="delete">
+        delete from order where id = #{id}
+    </delete>
+
+
+    <!--根据预登录昵称或手机号模糊查询订单-->
+    <select id="queryAllLikeName" resultType="order">
+        select * from `order`
+        <where>
+            <if test="name != null">
+                login_name like concat('%',#{name},'%')
+            </if>
+            <if test="name != null">
+                or login_phone like concat('%',#{name},'%')
+            </if>
+        </where>
+    </select>
+
+
+    <!--根据id查询订单-->
+    <select id="queryById" resultType="order">
+        select * from `order` where id = #{id}
+    </select>
+
+    <!--根据手机号查询订单信息-->
+    <select id="queryAllByPhone" resultType="order">
+        select * from `order` where login_phone = #{phone}
+    </select>
+
+
+</mapper>

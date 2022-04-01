@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xmu.mapper.DishesMapper">
+
+   <!-- <resultMap id="dishesMap" type="dishes">
+        <id column="id" property="id"></id>
+        <result column="name" property="name"></result>
+        <result column="price" property="price"></result>
+        <result column="status" property="status"></result>
+        <association property="dishesCategory" javaType="dishesCategory">
+            <result column="id" property="id"></result>
+            <result column="name" property="name"></result>
+            <result column="create_time" property="createTime"></result>
+        </association>
+    </resultMap>-->
+    <resultMap id="dishesMap" type="dishes">
+        <id column="id" property="id"></id>
+        <result column="name" property="name"></result>
+        <result column="price" property="price"></result>
+        <result column="status" property="status"></result>
+        <association property="dishesCategory" column="category_id" javaType="dishesCategory"
+        select="com.xmu.mapper.DishesCategoryMapper.queryById">
+        </association>
+    </resultMap>
+    <!--新增菜品-->
+    <insert id="save" parameterType="dishes">
+        insert into dishes(`name`,`price`,`status`,`category_id`)
+        values(#{name},#{price},#{status},#{dishesCategory.id})
+    </insert>
+
+    <!--删除菜品-->
+    <delete id="delete">
+        delete from dishes where id = #{id}
+    </delete>
+
+    <!--更新菜品-->
+    <update id="update" parameterType="dishes">
+        update dishes
+        set
+            name = #{name},
+            price = #{price},
+            status = #{status},
+            category_id = #{dishesCategory.id}
+        where id = #{id}
+    </update>
+
+    <!--通过名称模糊查询菜品列表-->
+    <select id="queryAllLikeName" resultMap="dishesMap">
+        select * from dishes
+        <where>
+            <if test="name != null">
+                name like concat('%',#{name},'%')
+            </if>
+        </where>
+    </select>
+
+
+
+    <select id="queryById" resultMap="dishesMap">
+        select * from dishes where id = #{id}
+    </select>
+
+    <!--更新菜品状态-->
+    <update id="updateStatus">
+        update dishes set status = #{status} where id = #{id}
+    </update>
+
+
+    <!--校验菜品名唯一-->
+    <select id="exist" resultType="dishes">
+        select * from dishes
+        <where>
+            <if test="id != null">
+                id != #{id}
+            </if>
+            <if test="name != null">
+                and name = #{name}
+            </if>
+        </where>
+    </select>
+</mapper>
